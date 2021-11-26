@@ -222,7 +222,7 @@ void *student_thread(void* arg)
         double prob = stud->calibre * cour->interest;
         double random_prob = (double)rand() / (double)RAND_MAX;
 
-        if(random_prob>prob)
+        if(random_prob<prob)
         {
             printf(TEXT_UNDERLINE COLOR_BLUE"Student %d has selected course %s permanently\n"COLOR_RESET, stud->id, cour->name);
             return NULL;

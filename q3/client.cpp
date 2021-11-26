@@ -67,13 +67,13 @@ void* client_thread(void* arg)
 
     memset(receive_data, 0, MAX_BUF_SIZE+1);
 
-    pthread_mutex_lock(&print_lock);
     while((num_bytes = read(listenfd, receive_data, MAX_BUF_SIZE))>0)
     {
-        cout<<receive_data;
+        pthread_mutex_lock(&print_lock);
+        cout<<receive_data<<endl;
+        pthread_mutex_unlock(&print_lock);
         memset(receive_data, 0, MAX_BUF_SIZE+1);
     }
-    pthread_mutex_unlock(&print_lock);
     if(num_bytes<0)
     {
         perror("Error reading bytes.");
