@@ -90,87 +90,98 @@ void* person_thread_function(void* arg)
         seat_semphore = &home_semaphore;
     
     int* selected_zone_pointer;
+    selected_zone_pointer=NULL;
     pthread_mutex_t *selected_zone_mutex;
-    
-    while ((s = sem_timedwait(seat_semphore, &ts)) == -1 && errno == EINTR)
-                continue;       /* Restart if interrupted by handler */
-    /* Check what happened */
-    if (s == -1)
+    while(selected_zone_pointer==NULL)
     {
-        if (errno == ETIMEDOUT)
+        while ((s = sem_timedwait(seat_semphore, &ts)) == -1 && errno == EINTR)
+            continue;       /* Restart if interrupted by handler */
+        /* Check what happened */
+        if(person->id==5)
         {
-            printf(COLOR_MAGENTA "%s couldn't get a seat\n" COLOR_RESET, person->name);
-            printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
-            return NULL;
+            printf("ADARSSSSSSSSSSSSSSSSSSSSSSSHHHHHHHHHHHHH\n");
         }
+        if (s == -1)
+        {
+            if (errno == ETIMEDOUT)
+            {
+                printf(COLOR_MAGENTA "%s couldn't get a seat\n" COLOR_RESET, person->name);
+                printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
+                return NULL;
+            }
+            else
+            {
+                perror("sem_timedwait Error");
+            }
+        } 
         else
         {
-            perror("sem_timedwait Error");
-        }
-    } 
-    else
-    {
-        if(person->away_home_neutral==1)
-        {
-            if(zone_h_remaining>0)
+            if(person->away_home_neutral==1)
             {
-                pthread_mutex_lock(&zone_h_mutex);
-                zone_h_remaining--;
-                pthread_mutex_unlock(&zone_h_mutex);
-                selected_zone_pointer=&zone_h_remaining;
-                selected_zone_mutex=&zone_h_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone H\n"COLOR_RESET, person->name);
+                if(zone_h_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_h_mutex);
+                    zone_h_remaining--;
+                    pthread_mutex_unlock(&zone_h_mutex);
+                    selected_zone_pointer=&zone_h_remaining;
+                    selected_zone_mutex=&zone_h_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone H\n"COLOR_RESET, person->name);
+                }
+                else if(zone_n_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_n_mutex);
+                    zone_n_remaining--;
+                    pthread_mutex_unlock(&zone_n_mutex);
+                    selected_zone_pointer=&zone_n_remaining;
+                    selected_zone_mutex=&zone_n_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone N\n", person->name);
+                }
             }
-            else //if(zone_n_remaining>0)
+            else if(person->away_home_neutral==0)
             {
-                pthread_mutex_lock(&zone_n_mutex);
-                zone_n_remaining--;
-                pthread_mutex_unlock(&zone_n_mutex);
-                selected_zone_pointer=&zone_n_remaining;
-                selected_zone_mutex=&zone_n_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone N\n", person->name);
+                if(zone_h_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_h_mutex);
+                    zone_h_remaining--;
+                    pthread_mutex_unlock(&zone_h_mutex);
+                    selected_zone_pointer=&zone_h_remaining;
+                    selected_zone_mutex=&zone_h_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone H\n"COLOR_RESET, person->name);
+                }
+                else if(zone_n_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_n_mutex);
+                    zone_n_remaining--;
+                    pthread_mutex_unlock(&zone_n_mutex);
+                    selected_zone_pointer=&zone_n_remaining;
+                    selected_zone_mutex=&zone_n_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone N\n"COLOR_RESET, person->name);
+                }
+                else if(zone_a_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_a_mutex);
+                    zone_a_remaining--;
+                    pthread_mutex_unlock(&zone_a_mutex);
+                    selected_zone_pointer=&zone_a_remaining;
+                    selected_zone_mutex=&zone_a_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone A\n"COLOR_RESET, person->name);
+                }
             }
-        }
-        else if(person->away_home_neutral==0)
-        {
-            if(zone_h_remaining>0)
+            else if(person->away_home_neutral==1)
             {
-                pthread_mutex_lock(&zone_h_mutex);
-                zone_h_remaining--;
-                pthread_mutex_unlock(&zone_h_mutex);
-                selected_zone_pointer=&zone_h_remaining;
-                selected_zone_mutex=&zone_h_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone H\n"COLOR_RESET, person->name);
-            }
-            else if(zone_n_remaining>0)
-            {
-                pthread_mutex_lock(&zone_n_mutex);
-                zone_n_remaining--;
-                pthread_mutex_unlock(&zone_n_mutex);
-                selected_zone_pointer=&zone_n_remaining;
-                selected_zone_mutex=&zone_n_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone N\n"COLOR_RESET, person->name);
-            }
-            else //if(zone_a_remaining>0)
-            {
-                pthread_mutex_lock(&zone_a_mutex);
-                zone_a_remaining--;
-                pthread_mutex_unlock(&zone_a_mutex);
-                selected_zone_pointer=&zone_a_remaining;
-                selected_zone_mutex=&zone_a_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone A\n"COLOR_RESET, person->name);
-            }
-        }
-        else //if(person->away_home_neutral==1)
-        {
-            if(zone_a_remaining>0)
-            {
-                pthread_mutex_lock(&zone_a_mutex);
-                zone_a_remaining--;
-                pthread_mutex_unlock(&zone_a_mutex);
-                selected_zone_pointer=&zone_a_remaining;
-                selected_zone_mutex=&zone_a_mutex;
-                printf(COLOR_GREEN"%s has got a seat in zone A\n"COLOR_RESET, person->name);
+                if(person->id==5)
+                {
+                    printf("%d ADARRRRSH\n", zone_a_remaining);
+                }
+                if(zone_a_remaining>0)
+                {
+                    pthread_mutex_lock(&zone_a_mutex);
+                    zone_a_remaining--;
+                    pthread_mutex_unlock(&zone_a_mutex);
+                    selected_zone_pointer=&zone_a_remaining;
+                    selected_zone_mutex=&zone_a_mutex;
+                    printf(COLOR_GREEN"%s has got a seat in zone A\n"COLOR_RESET, person->name);
+                }
             }
         }
     }
