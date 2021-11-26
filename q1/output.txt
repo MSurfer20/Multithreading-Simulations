@@ -1,0 +1,67 @@
+[1;32mStudent 0 has filled in preferences for course registration
+[0mSTUDENT 0 KAAAAAAAAAAAa
+[1;32mStudent 2 has filled in preferences for course registration
+[0mSTUDENT 2 KAAAAAAAAAAAa
+[1;32mStudent 8 has filled in preferences for course registration
+[0mSTUDENT 8 KAAAAAAAAAAAa
+[1;32mStudent 9 has filled in preferences for course registration
+[0mSTUDENT 9 KAAAAAAAAAAAa
++++++++++++++++++++++++++++++++++COURSE SMAI IS LOOKING FOR TA IN PRECOG LAB
+++++++++++++++++++++++++++++++TA_FREE: 1, TA_TUT_COUNT: 0, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+[1;32mTA 0 from lab 0 has been allocated to course SMAI for 1 TA ship
+[0m[0;34mCourse SMAI has been allocated 2 seats
+[0m[1;32mStudent 0 has been allocated a seat in course SMAI
+[0m+++++++++++++++++++++++++++++++++COURSE DSA IS LOOKING FOR TA IN PRECOG LAB
+++++++++++++++++++++++++++++++TA_FREE: 0, TA_TUT_COUNT: 1, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+++++++++++++++++++++++++++++++TA_FREE: 1, TA_TUT_COUNT: 0, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+[1;32mTA 1 from lab 0 has been allocated to course DSA for 1 TA ship
+[0m[0;34mCourse DSA has been allocated 2 seats
+[0m+++++++++++++++++++++++++++++++++COURSE CV IS LOOKING FOR TA IN CVIT LAB
+++++++++++++++++++++++++++++++TA_FREE: 1, TA_TUT_COUNT: 0, TUT_LIMIT: 2, CURR_ACCEPTABLE_COUNT: 0
+[1;32mTA 0 from lab 1 has been allocated to course CV for 0 TA ship
+[0m[0;34mCourse CV has been allocated 2 seats
+[0m+++++++++++++++++++++++++++++++++COURSE NLP IS LOOKING FOR TA IN PRECOG LAB
+++++++++++++++++++++++++++++++TA_FREE: 0, TA_TUT_COUNT: 1, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+++++++++++++++++++++++++++++++TA_FREE: 0, TA_TUT_COUNT: 1, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+++++++++++++++++++++++++++++++TA_FREE: 1, TA_TUT_COUNT: 0, TUT_LIMIT: 1, CURR_ACCEPTABLE_COUNT: 0
+[1;32mTA 2 from lab 0 has been allocated to course NLP for 1 TA ship
+[0m[0;34mCourse NLP has been allocated 4 seats
+[0m[1;32mStudent 9 has been allocated a seat in course SMAI
+[0m[1;32mStudent 2 has been allocated a seat in course CV
+[0m[1;32mStudent 8 has been allocated a seat in course NLP
+[0m[1;32mStudent 3 has filled in preferences for course registration
+[0mSTUDENT 3 KAAAAAAAAAAAa
+[1;32mStudent 3 has been allocated a seat in course NLP
+[0m[1;32mStudent 5 has filled in preferences for course registration
+[0mSTUDENT 5 KAAAAAAAAAAAa
+[1;32mStudent 5 has been allocated a seat in course NLP
+[0m[1;32mStudent 7 has filled in preferences for course registration
+[0mSTUDENT 7 KAAAAAAAAAAAa
+[1;32mStudent 1 has filled in preferences for course registration
+[0mSTUDENT 1 KAAAAAAAAAAAa
+[1;32mStudent 1 has been allocated a seat in course DSA
+[0m[1;32mStudent 4 has filled in preferences for course registration
+[0mSTUDENT 4 KAAAAAAAAAAAa
+[1;32mStudent 6 has filled in preferences for course registration
+[0mSTUDENT 6 KAAAAAAAAAAAa
+[1;32mStudent 6 has been allocated a seat in course DSA
+[0m[0;33mTutorial has started for Course SMAI with 2 seats filled out of 2
+[0m[0;33mTutorial has started for Course DSA with 2 seats filled out of 2
+[0m[0;33mTutorial has started for Course NLP with 3 seats filled out of 4
+[0m[0;33mTutorial has started for Course CV with 1 seats filled out of 2
+[0m[0;36mTA 0 from lab 0 has completed the tutorial and left the course SMAI
+[0m[0;36mTA 2 from lab 0 has completed the tutorial and left the course NLP
+[0m[0;34mStudent 3 has selected course NLP permanently
+[0m[0;36mTA 1 from lab 0 has completed the tutorial and left the course DSA
+[0m[0;35mStudent 5 has withdrawn from course NLP
+[0mSTUDENT 5 KAAAAAAAAAAAa
+[0;34mStudent 0 has selected course SMAI permanently
+[0m[0;35mStudent 8 has withdrawn from course NLP
+[0mSTUDENT 8 KAAAAAAAAAAAa
+[0;31mStudent 8 has changed current preference from NLP to SMAI
+[0m[0;35mStudent 1 has withdrawn from course DSA
+[0mSTUDENT 1 KAAAAAAAAAAAa
+[0;31mStudent 1 has changed current preference from DSA to NLP
+[0m[0;34mStudent 6 has selected course DSA permanently
+[0m[0;36mTA 0 from lab 1 has completed the tutorial and left the course CV
+[0m++++++++++++++++++++++STUDE
