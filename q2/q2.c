@@ -67,36 +67,6 @@ struct Goal* goals[1000];
 
 void* person_thread_function(void* arg)
 {
-    // Each person
-    // Team type
-    // Threads create and wait on all threads(struct pass containing student and zone)
-    // In indiv thread, pthread_cond_wait for that stadium
-    // variable for spectator whether he got a seat
-    // while(!got_seat && time_not_over && curr_zone_seats==0)
-    //{
-        // pthread_cond_wait(&signal_for_zone, &signal_mutex, &time_struct);
-        // N, H,A
-        // if(iska_return==0)
-        // {
-        //     pthread_mutex_lock(&stadium_lock)
-        //     if(>0)
-        //     {
-        //         decrement
-        //         lock on got_seat 
-        //         // cancel other threads
-        //         change got_seat
-        //         unlock got_seat
-        //     }
-        //     unlock
-        //     got_seat=true;
-        // }
-        // else
-        // {
-
-
-        // }
-    // }
-    // Global array which stadium ith person got
     struct Person* person = (struct Person*)arg;
     sleep(person->wait_time);
 

@@ -43,7 +43,7 @@ struct student
     int course_1;
     int course_2;
     int course_3;
-    double wait_time;
+    int wait_time;
 };
 struct student* students[1000];
 
@@ -241,6 +241,11 @@ void *student_thread(void* arg)
 int main()
 {
     scanf("%d %d %d", &num_students, &num_labs, &num_courses);
+    if(num_courses==0)
+    {
+        printf("NO COURSES GIVEN. SIMULATION OVER.\n");
+        return 0;
+    }
     // printf("AAAAAAAAAAAAAAAAAAAAAAAAa");
     for(int x=0;x<num_courses;x++)
     {
@@ -255,13 +260,15 @@ int main()
             scanf("%d", &courses[x]->lab_ids[y]);
         courses[x]->id=x;
         courses[x]->num_slots=0;
+        if(courses[x]->num_labs==0 || courses[x]->course_max_slots<1)
+            courses[x]->registration_open=false;
     }
     // printf("AAAAAAAAAAAAAAAAAAAAAAAAa");
 
     for(int x=0;x<num_students;x++)
     {
         students[x]=calloc(1, sizeof(struct student));
-        scanf("%lf %d %d %d %lf", &students[x]->calibre, &students[x]->course_1, &students[x]->course_2, &students[x]->course_3, &students[x]->wait_time);
+        scanf("%lf %d %d %d %d", &students[x]->calibre, &students[x]->course_1, &students[x]->course_2, &students[x]->course_3, &students[x]->wait_time);
         students[x]->id=x;
     }
     // printf("AAAAAAAAAAAAAAAAAAAAAAAAa");
@@ -283,6 +290,8 @@ int main()
         pthread_mutex_init(&labs_array[x]->lab_mutex, NULL);
         pthread_mutex_init(&labs_array[x]->remaining_tas_mutex, NULL);
         labs_array[x]->id=x;
+        if(labs_array[x]->num_tas==0 || labs_array[x]->tut_limit==0)
+            printf(COLOR_CYAN TEXT_UNDERLINE "Lab %s no longer has students available for TA ship\n" COLOR_RESET, labs_array[x]->name);
     }
     // printf("AAAAAAAAAAAAAAAAAAAAAAAAa");
 
