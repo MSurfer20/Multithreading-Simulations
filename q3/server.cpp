@@ -28,9 +28,9 @@ string dict_fetch(int key)
 
 string dict_concat(int key1, int key2)
 {
-    string ret_str;
     pthread_mutex_lock(&dict_lock[key1]);
     pthread_mutex_lock(&dict_lock[key2]);
+    string ret_str;
     if(dict[key1]=="" || dict[key2]=="")
     {
         ret_str = "Concat failed as at least one of the keys does not exist";

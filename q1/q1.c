@@ -114,6 +114,7 @@ void *course_thread(void* arg)
                     la->curr_acceptable_tut_count++, la->remaining_curr_count=la->num_tas;
                 pthread_mutex_unlock(&la->lab_mutex);
                 pthread_mutex_unlock(&ta_mutex[lab_id][ta_no]);
+                printf(COLOR_GREEN_BOLD "TA %d from lab %s has been allocated to course %s for %dth TA ship\n"COLOR_RESET, chosen_ta_id, labs_array[chosen_ta_lab]->name, cour->name, la->ta_tut_count[chosen_ta_id]);
                 break;
             }
         }
@@ -132,7 +133,6 @@ void *course_thread(void* arg)
             continue;
         }
         struct lab* la = labs_array[chosen_ta_lab];
-        printf(COLOR_GREEN_BOLD "TA %d from lab %s has been allocated to course %s for %dth TA ship\n"COLOR_RESET, chosen_ta_id, labs_array[chosen_ta_lab]->name, cour->name, la->ta_tut_count[chosen_ta_id]);
 
         int num_slots = random_no_range(1, cour->course_max_slots);
         cour->num_slots=num_slots;
