@@ -10,13 +10,15 @@ struct Request
     string command;
     string value;
     int time_of_request;
-
+    int id;
 };
 
 const char SERVER_ADDRESS[] = "127.0.0.1";
 void* client_thread(void* arg)
 {
     struct Request* req = (struct Request*)(arg);
+    pthread_t thread_id = pthread_self();
+    int req_no = req->id;
     sleep(req->time_of_request);
 
     int listenfd, connection_fd;
@@ -70,7 +72,7 @@ void* client_thread(void* arg)
     while((num_bytes = read(listenfd, receive_data, MAX_BUF_SIZE))>0)
     {
         pthread_mutex_lock(&print_lock);
-        cout<<receive_data<<endl;
+        cout<<req_no<<":"<<thread_id<<":"<<receive_data<<endl;
         pthread_mutex_unlock(&print_lock);
         memset(receive_data, 0, MAX_BUF_SIZE+1);
     }
@@ -96,6 +98,7 @@ int main(int argc, char** argv)
     for(int i=0;i<requests_count;i++)
     {
         struct Request* req = new Request();
+        req->id=i;
         
         cin>>req->time_of_request >> req->command >> req->key1;
         if(req->command == "insert")
@@ -111,7 +114,6 @@ int main(int argc, char** argv)
 
         pthread_create(&client_threads[i], NULL, client_thread, (void*)req);
     }
-    cout<<"YAS"<<endl;
 
     for(int i=0;i<requests_count;i++)
     {

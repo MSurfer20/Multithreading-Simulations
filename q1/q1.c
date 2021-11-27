@@ -149,13 +149,13 @@ void *course_thread(void* arg)
         printf(COLOR_YELLOW"Tutorial has started for Course %s with %d seats filled out of %d\n"COLOR_RESET, cour->name, og_seats-cour->num_slots, og_seats);
         cour->num_slots=0;
         sleep(6);
+        printf(COLOR_CYAN"TA %d from lab %s has completed the tutorial and left the course %s\n"COLOR_RESET, chosen_ta_id, labs_array[chosen_ta_lab]->name, cour->name);
         pthread_cond_broadcast(&cour->tut_session_condn);
         pthread_mutex_unlock(&cour->course_mutex);
 
         pthread_mutex_lock(&ta_mutex[chosen_ta_lab][chosen_ta_id]);
         la->ta_free[chosen_ta_id]=true;
         pthread_mutex_unlock(&ta_mutex[chosen_ta_lab][chosen_ta_id]);
-        printf(COLOR_CYAN"TA %d from lab %s has completed the tutorial and left the course %s\n"COLOR_RESET, chosen_ta_id, labs_array[chosen_ta_lab]->name, cour->name);
         if(la->ta_tut_count[chosen_ta_id] == la->tut_limit)
         {
             pthread_mutex_lock(&la->remaining_tas_mutex);
@@ -179,7 +179,7 @@ void *student_thread(void* arg)
 
     sleep(stud->wait_time);
 
-    printf(COLOR_GREEN_BOLD"Student %d has filled in preferences for course registration\n"COLOR_RESET, stud->id);
+    printf(COLOR_YELLOW TEXT_UNDERLINE"Student %d has filled in preferences for course registration\n"COLOR_RESET, stud->id);
 
     for(int pref_num=0; pref_num<3; pref_num++)
     {
