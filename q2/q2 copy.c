@@ -36,9 +36,8 @@ pthread_t person_th[1000];
 pthread_t goal_th[1000];
 pthread_mutex_t home_lock, away_lock, zone_h_mutex, zone_a_mutex, zone_n_mutex;
 pthread_cond_t home_cond, away_cond;
-pthread_cond_t neutral_fan_cond, home_fan_cond, away_fan_cond;
-pthread_mutex_t home_cond_dummy_lock, away_cond_dummy_lock, neutral_cond_dummy_lock;
 sem_t home_semaphore, away_semaphore, neutral_semaphore;
+sem_t home_cond_semaphore, away_cond_semaphore, neutral_cond_semaphore;
 
 struct Person
 {
@@ -180,24 +179,36 @@ void* person_thread_function(void* arg)
                 continue;
             }
         }
-        pthread_cond_t *waiting_cond;
-        pthread_mutex_t *dummy_mutex;
+        // pthread_cond_t *waiting_cond;
+        // pthread_mutex_t *dummy_mutex;
+        sem_t *waiting_cond_semaphore;
         if(person->away_home_neutral==-1)
-            waiting_cond=&away_fan_cond, dummy_mutex=&away_cond_dummy_lock;
+            waiting_cond_semaphore=&away_cond_semaphore;
         else if(person->away_home_neutral==0)
-            waiting_cond=&neutral_fan_cond, dummy_mutex=&neutral_cond_dummy_lock;
+            waiting_cond_semaphore=&neutral_cond_semaphore;
         else if(person->away_home_neutral==1)
-            waiting_cond=&home_fan_cond, dummy_mutex=&home_cond_dummy_lock;
+            waiting_cond_semaphore=&home_cond_semaphore;
         
-        pthread_mutex_lock(dummy_mutex);
-        int ret = pthread_cond_timedwait(waiting_cond, dummy_mutex, &ts);
-        pthread_mutex_unlock(dummy_mutex);
-        if(ret!=0)
+        // pthread_mutex_lock(dummy_mutex);
+        // int ret = pthread_cond_timedwait(waiting_cond, dummy_mutex, &ts);
+        // pthread_mutex_unlock(dummy_mutex);
+        int ret;
+        while ((ret = sem_timedwait(waiting_cond_semaphore, &ts)) == -1 && errno == EINTR)
+            continue;       /* Restart if interrupted by handler */
+        /* Check what happened */
+        if (ret == -1)
         {
-            printf(COLOR_MAGENTA "%s couldn't get a seat\n" COLOR_RESET, person->name);
-            printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
-            return NULL;
-        }
+            if (errno == ETIMEDOUT)
+            {
+                printf(COLOR_MAGENTA "%s couldn't get a seat\n" COLOR_RESET, person->name);
+                printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
+                return NULL;
+            }
+            else
+            {
+                perror("sem_timedwait Error");
+            }
+        } 
     }
     // ========================================
 
@@ -209,18 +220,18 @@ void* person_thread_function(void* arg)
         sem_post(selected_semaphore);
         if(selected_zone==-1)
         {
-            pthread_cond_broadcast(&away_fan_cond);
-            pthread_cond_broadcast(&neutral_fan_cond);
+            sem_post(&away_cond_semaphore);
+            sem_post(&neutral_cond_semaphore);
         }
         else if(selected_zone==0)
         {
-            pthread_cond_broadcast(&neutral_fan_cond);
-            pthread_cond_broadcast(&home_fan_cond);
+            sem_post(&neutral_cond_semaphore);
+            sem_post(&home_cond_semaphore);
         }
         else
         {
-            pthread_cond_broadcast(&neutral_fan_cond);
-            pthread_cond_broadcast(&home_fan_cond);
+            sem_post(&neutral_cond_semaphore);
+            sem_post(&home_cond_semaphore);
         }
         printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
         return NULL;
@@ -268,18 +279,18 @@ void* person_thread_function(void* arg)
     sem_post(selected_semaphore);
     if(selected_zone==-1)
     {
-        pthread_cond_broadcast(&away_fan_cond);
-        pthread_cond_broadcast(&neutral_fan_cond);
+        sem_post(&away_cond_semaphore);
+        sem_post(&neutral_cond_semaphore);
     }
     else if(selected_zone==0)
     {
-        pthread_cond_broadcast(&neutral_fan_cond);
-        pthread_cond_broadcast(&home_fan_cond);
+        sem_post(&neutral_cond_semaphore);
+        sem_post(&home_cond_semaphore);
     }
     else
     {
-        pthread_cond_broadcast(&neutral_fan_cond);
-        pthread_cond_broadcast(&home_fan_cond);
+        sem_post(&neutral_cond_semaphore);
+        sem_post(&home_cond_semaphore);
     }
 
     printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
@@ -337,12 +348,9 @@ int main()
     pthread_mutex_init(&zone_n_mutex, NULL);
     pthread_cond_init(&home_cond, NULL);
     pthread_cond_init(&away_cond, NULL);
-    pthread_mutex_init(&home_cond_dummy_lock, NULL);
-    pthread_mutex_init(&away_cond_dummy_lock, NULL);
-    pthread_mutex_init(&neutral_cond_dummy_lock, NULL);
-    pthread_cond_init(&away_fan_cond, NULL);
-    pthread_cond_init(&home_fan_cond, NULL);
-    pthread_cond_init(&neutral_fan_cond, NULL);
+    sem_init(&away_cond_semaphore, 0, 0);
+    sem_init(&home_cond_semaphore, 0, 0);
+    sem_init(&neutral_cond_semaphore, 0, 0);
 
     scanf("%d", &spectating_time_x);
     scanf("%d", &num_groups);
@@ -408,6 +416,6 @@ int main()
         pthread_join(person_th[x], NULL);
     }
 
-    printf("SIMULATION OVER");
+    printf("SIMULATION OVER\n");
     exit(0);
 }
