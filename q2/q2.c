@@ -177,7 +177,7 @@ void* person_thread_function(void* arg)
                 pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
                 remaining_people_in_groups[person->group_id]--;
                 if(remaining_people_in_groups[person->group_id]==0)
-                printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+                printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id+1);
                 pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
                 return NULL;
             }
@@ -193,7 +193,7 @@ void* person_thread_function(void* arg)
     if(person->away_home_neutral==0)
     {
         sleep(spectating_time_x);
-        printf(COLOR_CYAN"%s watched the match for %d seconds and is leaving\n"COLOR_RESET, person->name, spectating_time_x);
+        printf(TEXT_UNDERLINE COLOR_GREEN_BOLD"%s watched the match for %d seconds and is leaving\n"COLOR_RESET, person->name, spectating_time_x);
         sem_post(selected_semaphore);
         if(selected_zone==-1)
         {
@@ -214,7 +214,7 @@ void* person_thread_function(void* arg)
         pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
         remaining_people_in_groups[person->group_id]--;
         if(remaining_people_in_groups[person->group_id]==0)
-        printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+        printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id+1);
         pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
         // printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
         return NULL;
@@ -280,7 +280,7 @@ void* person_thread_function(void* arg)
     pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
     remaining_people_in_groups[person->group_id]--;
     if(remaining_people_in_groups[person->group_id]==0)
-    printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+    printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id+1);
     pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
     // printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
     return NULL;
