@@ -202,7 +202,7 @@ void *student_thread(void* arg)
 
         pthread_mutex_lock(&cour->course_mutex);
 
-        while(cour->registration_open && cour->num_slots==0)
+        while(cour->num_slots==0 && cour->registration_open)
         {
             pthread_cond_wait(&cour->tut_slots_condn, &cour->course_mutex);
         }

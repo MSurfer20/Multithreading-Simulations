@@ -176,7 +176,7 @@ void* thread_function(void* arg)
             pthread_cond_wait(&pool_cond, &pool_mutex);
         }
         int* conn = connections.front();
-        cout<<"SECCCCC";
+        // cout<<"SECCCCC";
         connections.pop();
         pthread_mutex_unlock(&pool_mutex);
         connection_handler(conn);
@@ -234,9 +234,9 @@ int main(int argc, char** argv)
         exit(-1);
     }
 
-    if((listen(listenfd, 10)) <0)
+    if((listen(listenfd, BACKLOG)) <0)
     {
-        perror("Bind error");
+        perror("Listening error");
         exit(-1);
     }
 
@@ -260,8 +260,8 @@ int main(int argc, char** argv)
         int *pclient = (int*)malloc(sizeof(int));
         *pclient = connection_fd;
         connections.push(pclient);
-        pthread_mutex_unlock(&pool_mutex);
         pthread_cond_signal(&pool_cond);
+        pthread_mutex_unlock(&pool_mutex);
         // pthread_create(&thrd, NULL, connection_handler, (void*)pclient);
     }
 
