@@ -30,6 +30,8 @@ int num_groups, num_goal_chances, spectator_count;
 int home_goals, away_goals;
 
 int num_people_in_groups[1000];
+int remaining_people_in_groups[1000];
+pthread_mutex_t remaining_people_grps_lock[1000];
 int zone_h_remaining, zone_a_remaining, zone_n_remaining;
 
 pthread_t person_th[1000];
@@ -201,7 +203,12 @@ void* person_thread_function(void* arg)
             if (errno == ETIMEDOUT)
             {
                 printf(COLOR_MAGENTA "%s couldn't get a seat\n" COLOR_RESET, person->name);
-                printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
+                printf(COLOR_CYAN TEXT_UNDERLINE"%s is waiting for their friends at the exit\n"COLOR_RESET, person->name);
+                pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
+                remaining_people_in_groups[person->group_id]--;
+                if(remaining_people_in_groups[person->group_id]==0)
+                printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+                pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
                 return NULL;
             }
             else
@@ -233,7 +240,13 @@ void* person_thread_function(void* arg)
             sem_post(&neutral_cond_semaphore);
             sem_post(&home_cond_semaphore);
         }
-        printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
+        printf(COLOR_CYAN TEXT_UNDERLINE"%s is waiting for their friends at the exit\n"COLOR_RESET, person->name);
+        pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
+        remaining_people_in_groups[person->group_id]--;
+        if(remaining_people_in_groups[person->group_id]==0)
+        printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+        pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
+        // printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
         return NULL;
     }
 
@@ -293,7 +306,13 @@ void* person_thread_function(void* arg)
         sem_post(&home_cond_semaphore);
     }
 
-    printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
+    printf(COLOR_CYAN TEXT_UNDERLINE"%s is waiting for their friends at the exit\n"COLOR_RESET, person->name);
+    pthread_mutex_lock(&remaining_people_grps_lock[person->group_id]);
+    remaining_people_in_groups[person->group_id]--;
+    if(remaining_people_in_groups[person->group_id]==0)
+    printf(COLOR_YELLOW"Group %d is leaving for dinner\n"COLOR_RESET, person->group_id);
+    pthread_mutex_unlock(&remaining_people_grps_lock[person->group_id]);
+    // printf(COLOR_YELLOW"%s is leaving for dinner\n"COLOR_RESET, person->name);
     return NULL;
 }
 
@@ -359,6 +378,8 @@ int main()
     for(int x=0;x<num_groups;x++)
     {
         scanf("%d", &num_people_in_groups[x]);
+        remaining_people_in_groups[x]=num_people_in_groups[x];
+        pthread_mutex_init(&remaining_people_grps_lock[x], NULL);
         for(int z=0;z<num_people_in_groups[x]; z++)
         {
             persons[y]=calloc(1, sizeof(struct Person));
