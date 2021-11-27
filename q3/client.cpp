@@ -36,8 +36,8 @@ void* client_thread(void* arg)
     //INITIALIZING ADDRESS
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family=AF_INET;
-    servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
     servaddr.sin_port = htons(PORT);
+    servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
 
     if(inet_pton(AF_INET, SERVER_ADDRESS, &servaddr.sin_addr)<=0)
     {
@@ -112,14 +112,11 @@ int main(int argc, char** argv)
         cin>>req->value;
         else if(req->command=="concat")
         cin>>req->key2;
-
-        //take more input
-
         pthread_create(&client_threads[i], NULL, client_thread, (void*)req);
     }
 
-    for(int i=0;i<requests_count;i++)
+    for(auto &thread:client_threads)
     {
-        pthread_join(client_threads[i], NULL);
+        pthread_join(thread, NULL);
     }
 }

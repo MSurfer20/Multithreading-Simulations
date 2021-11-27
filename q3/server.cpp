@@ -145,14 +145,19 @@ void* connection_handler(void* arg)
 
     if(command=="fetch")
     response = dict_fetch(key1);
-    else if(command=="concat")
-    response=dict_concat(key1, key2);
-    else if(command=="insert")
+    
+    if(command=="insert")
     response=dict_insert(key1, value);
-    else if(command=="delete")
-    response=dict_delete(key1);
-    else if(command=="update")
+    
+    if(command=="update")
     response=dict_update(key1, value);
+    
+    if(command=="delete")
+    response=dict_delete(key1);
+    
+    if(command=="concat")
+    response=dict_concat(key1, key2);
+
     //Send a response
     snprintf(sendline, MAX_BUF_SIZE+1, "%s", response.c_str());
 
@@ -224,9 +229,9 @@ int main(int argc, char** argv)
 
     //INITIALIZING ADDRESS
     bzero(&servaddr, sizeof(servaddr));
+    servaddr.sin_port = htons(PORT);
     servaddr.sin_family=AF_INET;
     servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
-    servaddr.sin_port = htons(PORT);
 
     if(bind(listenfd, (SA*)&servaddr, sizeof(servaddr)) < 0)
     {
