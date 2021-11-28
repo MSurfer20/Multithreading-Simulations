@@ -406,6 +406,10 @@ int main()
     {
         pthread_join(person_th[x], NULL);
     }
+    for(int x=0;x<num_goal_chances;x++)
+    {
+        pthread_join(goal_th[x], NULL);
+    }
 
     printf("SIMULATION OVER\n");
     exit(0);
