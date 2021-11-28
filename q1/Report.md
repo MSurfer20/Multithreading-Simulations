@@ -16,10 +16,10 @@ make
 ## Course Thread
 * The course thread first converts the `void*` argument to the course struct that is passed to the thread.
 * Then, I run a while loop until the course registrations continue. All work related to the course happens in this loop, and the thread exits when this loop ends.
-* I sleep at the start to give time for students time to fill preferences before TAs are chosen.
-* Then, I iterate over all the TAs of all the labs, checking if they are available to take the tutorial(after applying appropriate locks), and changing their tutorial counts/availability when I choose them. **BONUS IS IMPLEMENTED:** For each lab, I kept a check of the number of TAs who are yet to conduct 
+* I sleep at the start to give time for students time to fill preferences before TAs are chosen. I also set number of student slots available for that course's tutorial to 0 after acquiring the lock of the course.
+* Then, I iterate over all the TAs of all the labs, checking if they are available to take the tutorial(after applying appropriate locks), and changing their tutorial counts/availability when I choose them. **BONUS IS IMPLEMENTED:** For each lab, I kept a check of the number of TAs who are yet to conduct the tutorial `i+1`th number of times, and only choose the current TA if it is one of them. Note that I acquire the lock of the TA before changing different values for him.
 * If I don't find a TA, I check if there is a TA who is busy, but can take a tutorial. If no such TA exists, then I close the registrations of the course and the while loop exits. **The code also broadcasts to the students waiting for that course's tutorial to be held, and so, they can break and move on to their next preference/exit the simulation.** 
-* Now, since I have found a TA, I find the random number of slots between 1 and the max limit given.
+* Now, since I have found a TA, I find the random number of slots between 1 and the max limit given, and acquire the course lock and update them.
 * **After allocating seatch, I broadcast on the condition variable of that course that signals to the students waiting for the course's slots to start filling that the slot filling has begun.**
 ```
 pthread_cond_broadcast(&cour->tut_slots_condn);
